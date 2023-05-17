@@ -132,11 +132,13 @@ func SplitTexte(arg4, arg1, arg3 string, textePhrase []string) [9][]string {
 
 	if IsColor(os.Args[1]) {
 		position = foundWordColor(arg4, arg1)
+
 		if len(os.Args) == 3 {
 			for i := 0; i < len(arg1); i++ {
 				position = append(position, i)
 			}
 		}
+		IsCouleur(arg3)
 	}
 
 	for j, text := range textePhrase {
@@ -221,6 +223,7 @@ func CaseResolved(arg1 string, arg3 string) bool {
 		}
 		return true
 	}
+
 	return false
 }
 
@@ -236,10 +239,10 @@ func DefineArg() string {
 			arg2 = os.Args[2]
 		}
 		return arg2
-	} else if len(os.Args) == 4 || len(os.Args) == 3 && (IsColor(os.Args[1]) == true) {
+	} else if (len(os.Args) == 3 || len(os.Args) == 4) && (IsColor(os.Args[1]) == true) {
 		arg2 = "standard"
 		return arg2
-	} else if len(os.Args) == 4 && (IsFile(os.Args[1]) == true) {
+	} else if len(os.Args) == 4 && (IsFile(os.Args[1])) {
 		arg2 = os.Args[3]
 		if arg2 != "standard" && arg2 != "shadow" && arg2 != "thinkertoy" {
 			errorOutput()
@@ -281,24 +284,28 @@ func errorColor() {
 }
 
 func IsFile(arg3 string) bool {
+	var option1 = "--output"
 	var option = "--output="
 	var fichier string
-	if len(arg3) > 10 {
-		if strings.Contains(option[0:3], arg3[0:3]) {
-			if strings.Contains(option, arg3[0:9]) {
-				if len(os.Args) > 2 {
-					for i := 9; i < len(arg3); i++ {
-						fichier += string(arg3[i])
-					}
-					if len(fichier) > 4 && fichier[len(fichier)-1] == 't' && fichier[len(fichier)-2] == 'x' && fichier[len(fichier)-3] == 't' && fichier[len(fichier)-4] == '.' {
-						return true
+	if len(arg3) >= 8 {
+		if option1 == arg3[0:8] {
+			if len(arg3) >= 9 {
+				if option == arg3[0:9] {
+					if len(os.Args) > 2 {
+						for i := 9; i < len(arg3); i++ {
+							fichier += string(arg3[i])
+						}
+						if len(fichier) > 4 && fichier[len(fichier)-1] == 't' && fichier[len(fichier)-2] == 'x' && fichier[len(fichier)-3] == 't' && fichier[len(fichier)-4] == '.' {
+							return true
+						} else {
+							errorOutput()
+						}
 					} else {
 						errorOutput()
 					}
 				} else {
 					errorOutput()
 				}
-
 			} else {
 				errorOutput()
 			}
@@ -311,12 +318,12 @@ func IsFile(arg3 string) bool {
 	return false
 }
 func IsColor(arg3 string) bool {
-	option := "--color="
-
-	if len(arg3) > 5 {
-		if arg3[0:5] == option[0:5] {
+	option := "--color"
+	option2 := "--color="
+	if len(arg3) >= 7 {
+		if arg3[0:7] == option {
 			if len(arg3) > 8 {
-				if option == arg3[0:8] {
+				if option2 == arg3[0:8] {
 					if len(os.Args) >= 3 {
 						return true
 					} else {
@@ -359,6 +366,28 @@ func writeFile(arg3 string) *os.File {
 
 	return file
 }
+
+func IsCouleur(arg3 string) bool {
+	var argument = arg3[8:]
+	var option = []string{"green", "yellow", "blue", "red", "magenta", "black", "orange"}
+	var actif = false
+	for i := 0; i < len(option); i++ {
+		if argument == option[i] {
+			actif = true
+			break
+		} else {
+			actif = false
+		}
+	}
+
+	if !actif {
+		fmt.Print("color not found")
+		os.Exit(0)
+	}
+
+	return actif
+}
+
 func couleur(text, arg3 string) string {
 	var option = []string{"green", "yellow", "blue", "red", "magenta", "black", "orange"}
 	var argument = arg3[8:]
@@ -442,3 +471,4 @@ func asciiArt(arg1 string, arg3 string, arg4 string, texte string) {
 	}
 	fmt.Print(texte2)
 }
+

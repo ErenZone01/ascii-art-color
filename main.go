@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
+
 	if len(os.Args) >= 2 && len(os.Args) <= 4 {
 		var arg3 string
 		var arg4 string
@@ -31,7 +32,6 @@ func main() {
 				arg3 = ""
 			}
 		}
-
 		if len(os.Args) == 4 && !IsFile(arg3) && !IsColor(arg3) {
 			error()
 		}
